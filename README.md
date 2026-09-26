@@ -10,8 +10,30 @@ A live, production-grade Retrieval-Augmented Generation (RAG) platform designed 
 
 The system decouples data upload from continuous processing to maintain memory bounds. Below is the data flow map demonstrating how the user document passes into context execution:
 
-┌─────────────────────────┐│  User Text Document     │  <-- Local file asset loaded via Streamlit└───────────┬─────────────┘│ (.txt Read / String Conversion)▼┌─────────────────────────┐│  Operational Cache      │  <-- Held inside application memory boundaries└───────────┬─────────────┘│├─◄─ [ User Ingests Query ] (e.g., "What is the vacation policy?")▼┌─────────────────────────┐│  Context Grounding      │  <-- Target string wrapped into isolated Prompt└───────────┬─────────────┘│ (Sent via google-genai interactions pipeline)▼┌─────────────────────────┐│   Gemini 3.5 Flash      │  <-- Model reasoning strictly bound to document└───────────┬─────────────┘│ (Generates verified JSON/Text response)▼┌─────────────────────────┐│  Grounded Answer Matrix │  <-- Displays clean answer to Recruiter/User└─────────────────────────┘
 
+```mermaid
+graph TD
+    %% Define Styles and Colors
+    classDef Ingest fill:#EBF5FB,stroke:#2E86C1,stroke-width:2px,color:#1B4F72,font-weight:bold;
+    classDef Logic fill:#EAFAF1,stroke:#27AE60,stroke-width:2px,color:#145A32,font-weight:bold;
+    classDef Core fill:#FEF9E7,stroke:#D4AC0D,stroke-width:2px,color:#7D6608,font-weight:bold;
+    classDef Output fill:#FBEEE6,stroke:#E59866,stroke-width:2px,color:#6E2C00,font-weight:bold;
+
+    %% Diagram Nodes
+    A[📄 User Text Document .txt]:::Ingest
+    B[🧠 Operational Memory Cache]:::Ingest
+    C[📥 User Query Input]:::Logic
+    D[🔒 Context Grounding Prompt]:::Logic
+    E[⚡ Gemini 3.5 Flash Engine]:::Core
+    F[🎯 Grounded Answer Matrix]:::Output
+
+    %% Flow Connections
+    A -->|String Conversion| B
+    B --> D
+    C -->|Semantic Question| D
+    D -->|Interactions API Ingestion| E
+    E -->|Structured Context Synthesis| F
+```
 
 ---
 
